@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class UrlDownloader {
@@ -22,9 +24,18 @@ public class UrlDownloader {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public URL getURL(){
 		return url;
+	}
+	
+	public void deleteHtmlTags(String regexHtml){
+		String html = regexHtml;
+		Pattern p = Pattern.compile("<a href=(?:\"([^\"]+)\"|'([^']+)').*?>");
+		Matcher m = p.matcher(html);
+		while(m.find()) {
+			System.out.println(m.group(1));
+		}
 	}
 
 
@@ -34,9 +45,9 @@ public class UrlDownloader {
 		String webbsite = scan.next();
 
 		try {
-			
+
 			UrlDownloader mainurl = new UrlDownloader(webbsite);
-			
+
 			// get URL content
 			url = mainurl.getURL();
 			URLConnection conn = url.openConnection();
@@ -61,6 +72,8 @@ public class UrlDownloader {
 
 			while ((inputLine = br.readLine()) != null) {
 				bw.write(inputLine);
+				mainurl.deleteHtmlTags(inputLine);
+
 			}
 
 			bw.close();
@@ -68,11 +81,16 @@ public class UrlDownloader {
 
 			System.out.println("Done");
 
+
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+
+
+
 
 	}
 }
