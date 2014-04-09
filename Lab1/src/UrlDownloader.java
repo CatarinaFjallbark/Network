@@ -29,6 +29,15 @@ public class UrlDownloader {
 		return url;
 	}
 	
+	public void decideIfPdf(String urlText){
+		String url = urlText;
+		Pattern p = Pattern.compile("<a href=(?:\"([^\"]+.pdf)\"|'([^']+.pdf)').*?>");
+		Matcher m = p.matcher(url);
+		while(m.find()) {
+			System.out.println(m.group(1));
+		}
+	}
+
 	public void deleteHtmlTags(String regexHtml){
 		String html = regexHtml;
 		Pattern p = Pattern.compile("<a href=(?:\"([^\"]+)\"|'([^']+)').*?>");
@@ -36,6 +45,7 @@ public class UrlDownloader {
 		while(m.find()) {
 			System.out.println(m.group(1));
 		}
+
 	}
 
 
@@ -72,7 +82,7 @@ public class UrlDownloader {
 
 			while ((inputLine = br.readLine()) != null) {
 				bw.write(inputLine);
-				mainurl.deleteHtmlTags(inputLine);
+				mainurl.decideIfPdf(inputLine);
 
 			}
 
@@ -87,9 +97,6 @@ public class UrlDownloader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-
-
 
 
 	}
