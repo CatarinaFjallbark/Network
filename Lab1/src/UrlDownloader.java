@@ -19,16 +19,15 @@ public class UrlDownloader {
 			
 			String destination = "/Users/catarina/Desktop/Pdfer/";
 			ArrayList <String> pdfs = new ArrayList<String>();
-			pdfs = r.getPdfs();
+			pdfs = r.getPDF();
 
 			for(int i=0; i<pdfs.size(); i++){
 				StringBuilder s = new StringBuilder();
 				s.append(destination);
 				s.append(String.valueOf(i+1));
 				s.append(".pdf");
-				r.readPdf(pdfs.get(i), s.toString());
-				//UrlReader p = new UrlReader(new URL(pdfs.get(i)), s.toString());
-				//p.read();
+				r.readPDF(pdfs.get(i), s.toString());
+			
 			}
 			System.out.print("\n"+ pdfs.size());
 

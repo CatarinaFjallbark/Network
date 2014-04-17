@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -21,11 +23,11 @@ public class UrlReader {
 		this.fileName = fileName;
 	}
 
-	public ArrayList<String> getPdfs() {
+	public ArrayList<String> getPDF() {
 		return urls;
 	}
 
-	public void decideIfPdf(String urlText) {
+	public void handlePDF(String urlText) {
 		String url = urlText;
 		Pattern p = Pattern
 				.compile("<a href=(?:\"([^\"]+.pdf)\"|'([^']+.pdf)').*?>");
@@ -37,56 +39,36 @@ public class UrlReader {
 	}
 
 
-	public void readPdf(String link, String destination){
+	public void readPDF(String link, String destination){
 		try {
 			URL url = new URL(link);
-			URLConnection conn;
-			conn = url.openConnection();
 
-			// open the stream and put it into BufferedReader
-			InputStreamReader in = new InputStreamReader(conn.getInputStream());
-			BufferedReader br = new BufferedReader(in);
+			InputStream is = url.openStream();
+
 			File file = new File(destination);
 			if (!file.exists()) {
 				file.createNewFile();
 			}
 
-			//use FileWriter to write file
-			FileWriter filew = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter buffer = new BufferedWriter(filew);
+			FileOutputStream fos = new FileOutputStream(file);
 
-			/*		char[] skopa = new char [1024];
-			int result;
-			while((result = br.read(skopa)) >= 0) {
-				buffer.write(skopa, 0, result);
-			}*/
-
-			char[] input = new char [1024];
-			int bytesRead = 0;
-			int bytesToRead = input.length;
-
-			while(bytesRead<bytesToRead){
-				int results = in.read(input, bytesRead, bytesToRead-bytesRead);
-				if(results == -1){
-					break;
-				}
-				bytesRead += results;
-				buffer.write(input);
-				/*			String inputLine;
-
-			while ((inputLine = br.readLine()) != null) {
-				buffer.write(inputLine);
-
+			System.out.println("Reading file..");
+			int lenght = -1;
+			byte[]buffer = new byte[1024];
+			while((lenght = is.read(buffer))>-1){
+				fos.write(buffer, 0, lenght);
 			}
-				 */
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fos.close();
+			is.close();
+			System.out.println("Download complete");
+
+
+		} catch (Exception e) { // TODO Auto-generated catch block
+			e.printStackTrace(); 
 		}
-
-
 	}
+
+
 
 	public void read(){
 		try{
@@ -110,34 +92,10 @@ public class UrlReader {
 			//use FileWriter to write file
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
-			/*			
-			char[] skopa = new char [1024];
-			int result;
-			while((result = br.read(skopa)) != -1) {
-				bw.write(skopa, 0, result);
-				decideIfPdf(skopa);
-
-			}*/
-
-			/*
-			char[] input = new char [10000];
-			int bytesRead = 0;
-			int bytesToRead = input.length;
-
-			while(bytesRead<bytesToRead){
-				int results = br.read(input, bytesRead, bytesToRead-bytesRead);
-				if(results == -1){
-					break;
-				}
-				bytesRead += results;
-				bw.write(input);
-
-			}
-			 */
 
 			while ((inputLine = br.readLine()) != null) {
 				bw.write(inputLine);
-				decideIfPdf(inputLine);
+				handlePDF(inputLine);
 			}
 
 			bw.close();
