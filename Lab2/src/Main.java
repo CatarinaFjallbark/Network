@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 class Downloader {
 	public static void download(String url){
@@ -19,37 +21,67 @@ class DownloaderThread extends Thread {
 	public DownloaderThread(String url){
 		this.url = url;
 	}
-	
+
 	public void run(){
 		Downloader.download(url);
 	}
 }
 
 class DownloaderThreadList extends Thread{
-	
 	public void run(){
-		Downloader.download(Main.getUrl());
+		String url = Main.getUrl();
+		if(url!=null){
+			Downloader.download(url);
+		}else{
+			System.out.print("There are more threads than urls");
+		}	}
+}
+
+class DownloaderRunnable implements Runnable{
+
+	public DownloaderRunnable(){
 	}
+
+	@Override
+	public void run() {
+		String url = Main.getUrl();
+		if(url!=null){
+			Downloader.download(url);
+		}else{
+			System.out.print("\nThere are more threads than urls\n\n");
+		}
+
+	}
+
 }
 
 public class Main {
-	static String [] list = {"www.facebook.se", "www.instagram.se", "www.google.se"};
-	static int nbr = -1;
-	
-	public static void main(String args[]){
-		
-		DownloaderThreadList t1 = new DownloaderThreadList();
-		DownloaderThreadList t2 = new DownloaderThreadList();
-		DownloaderThreadList t3 = new DownloaderThreadList();
+	static ArrayList <String>list;
+	static int index = -1;
 
-		t1.start();
-		t2.start();
-		t3.start();
-		
+	public Main(){
+		list = new ArrayList<String>();
+		list.add("www.facebook.se");
+		list.add("www.instagram.se");
+		list.add("www.google.se");
 	}
 
-	public static synchronized String  getUrl() {
-		nbr++;
-		return list[nbr];
+	public static void main(String args[]){
+		new Main();
+		System.out.print("How many threads?\n");
+		Scanner scan = new Scanner(System.in);
+		int nbrOfthreads = scan.nextInt();
+
+		for(int i = 0; i<nbrOfthreads; i++){
+			new Thread(new DownloaderRunnable()).start();
+		}
+	}
+	
+	public static synchronized String getUrl() {
+		index++;
+		if(index < list.size()){
+		return list.get(index);
+		}
+		return null;
 	}
 }
