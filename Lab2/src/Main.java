@@ -7,13 +7,13 @@ class Downloader {
 	private static String destination = "/Users/catarina/Desktop/Pdfer/"; 
 	public static void download(String url){
 		try{
-		System.out.println("Started downloading: " + url);
-		UrlReader ur = new UrlReader();
-		StringBuilder sb = new StringBuilder();
-		sb.append(destination);
-		String name = url.substring(url.lastIndexOf('/') + 1);
-		sb.append(name);
-		ur.readPDF(url, sb.toString());
+			System.out.println("Started downloading: " + url);
+			UrlReader ur = new UrlReader();
+			StringBuilder sb = new StringBuilder();
+			sb.append(destination);
+			String name = url.substring(url.lastIndexOf('/') + 1);
+			sb.append(name);
+			ur.readPDF(url, sb.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +67,7 @@ class DownloadExecutors{
 		ExecutorService executorService = Executors.newFixedThreadPool(nbrOfthreads);
 
 		for(int i = 0; i< nbrOfthreads; i++){
-		executorService.execute(new DownloaderRunnable());
+			executorService.execute(new DownloaderRunnable());
 		}
 		executorService.shutdown();
 
@@ -91,9 +91,9 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 		int nbrOfthreads = scan.nextInt();
 
-			//new Thread(new DownloaderRunnable()).start();
-			new DownloadExecutors().run(nbrOfthreads);
-		
+		//new Thread(new DownloaderRunnable()).start();
+		new DownloadExecutors().run(nbrOfthreads);
+
 	}
 
 	public static synchronized String getUrl() {
