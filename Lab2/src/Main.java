@@ -1,13 +1,19 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class Downloader {
+	private static String destination = "/Users/catarina/Desktop/Pdfer/"; 
 	public static void download(String url){
+		try{
 		System.out.println("Started downloading: " + url);
-		Random random = new Random();
-		try {
-			Thread.sleep(2000 + random.nextInt(5000));
+		UrlReader ur = new UrlReader();
+		StringBuilder sb = new StringBuilder();
+		sb.append(destination);
+		String name = url.substring(url.lastIndexOf('/') + 1);
+		sb.append(name);
+		ur.readPDF(url, sb.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,15 +61,28 @@ class DownloaderRunnable implements Runnable{
 
 }
 
+class DownloadExecutors{
+
+	public void run(int nbrOfthreads){
+		ExecutorService executorService = Executors.newFixedThreadPool(nbrOfthreads);
+
+		for(int i = 0; i< nbrOfthreads; i++){
+		executorService.execute(new DownloaderRunnable());
+		}
+		executorService.shutdown();
+
+	}
+}
+
 public class Main {
 	static ArrayList <String>list;
 	static int index = -1;
 
 	public Main(){
 		list = new ArrayList<String>();
-		list.add("www.facebook.se");
-		list.add("www.instagram.se");
-		list.add("www.google.se");
+		list.add("http://fileadmin.cs.lth.se/cs/Education/EDA095/2014/lectures/f2-1x1.pdf");
+		list.add("http://fileadmin.cs.lth.se/cs/Education/EDA095/2014/lectures/f2-2x2.pdf");
+		list.add("http://fileadmin.cs.lth.se/cs/Education/EDA095/2014/lectures/URL_2014-1x1.pdf");
 	}
 
 	public static void main(String args[]){
@@ -72,15 +91,15 @@ public class Main {
 		Scanner scan = new Scanner(System.in);
 		int nbrOfthreads = scan.nextInt();
 
-		for(int i = 0; i<nbrOfthreads; i++){
-			new Thread(new DownloaderRunnable()).start();
-		}
+			//new Thread(new DownloaderRunnable()).start();
+			new DownloadExecutors().run(nbrOfthreads);
+		
 	}
-	
+
 	public static synchronized String getUrl() {
 		index++;
 		if(index < list.size()){
-		return list.get(index);
+			return list.get(index);
 		}
 		return null;
 	}
