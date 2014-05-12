@@ -8,6 +8,7 @@ public class ChatServer {
 	
 	public static void main(String[] args) {
 		int port = 30000;
+		System.out.println("Server started");
 		Vector<Chatter> vector = new Vector<Chatter>();
 		ServerBox box = new ServerBox(vector);
 		try {
