@@ -8,7 +8,7 @@ class Downloader {
 	public static void download(String url){
 		try{
 			System.out.println("Started downloading: " + url);
-			UrlReader ur = new UrlReader();
+			UrlReaderClass ur = new UrlReaderClass();
 			StringBuilder sb = new StringBuilder();
 			sb.append(destination);
 			String name = url.substring(url.lastIndexOf('/') + 1);

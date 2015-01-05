@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UrlReader {
+public class UrlReaderClass {
 	private ArrayList<String> urls;
 
-	public UrlReader() {
+	public UrlReaderClass() {
 		urls = new ArrayList<String>();
 	}
 
